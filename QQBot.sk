@@ -1,0 +1,43 @@
+# 导入java类
+import:
+    org.bukkit.event.player.AsyncPlayerChatEvent
+    me.dreamvoid.miraimc.bukkit.event.message.passive.AbstractMessageEvent # Require MIraimc
+    me.dreamvoid.miraimc.api.MiraiBot
+# 初始化
+on load:
+    # 你可以在这里设置群和qqbot的ID
+    set {GROUP_ID} to 114514
+    set {BOT_ID} to 1919810
+
+
+function sendMsgToGroup(message: text):
+    set {_bot} to MiraiBot.getBot({BOT_ID})
+    set {_group} to {_bot}.getGroup({GROUP_ID})
+    {_group}.sendMessage("%{_message}%")
+
+# 群消息->游戏
+on AbstractMessageEvent:
+    event.getGroupID() is {GROUP_ID} # 判断消息是否来自于该群
+
+    set {_message} to event.getMessage()
+    set {_sender} to event.getSenderName()
+
+    broadcast "&b&lQQ &e>> &6%{_sender}%:&r%{_message}%" # 向游戏内发送消息
+
+
+
+#游戏消息->群
+on AsyncPlayerChatEvent:
+    set {_message} to event.getMessage()
+    set {_sender} to event.getPlayer().getName()
+
+    sendMsgToGroup("<%{_sender}%> %{_message}%") # 向群内发送消息
+
+on join:
+    sendMsgToGroup("%player%加入了游戏")
+
+on quit:
+    sendMsgToGroup("%player%退出了游戏")
+
+on death of a player:
+    sendMsgToGroup("死亡：%victim%")
