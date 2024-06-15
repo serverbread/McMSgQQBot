@@ -1,7 +1,7 @@
 # 导入java类
 import:
     org.bukkit.event.player.AsyncPlayerChatEvent
-    me.dreamvoid.miraimc.bukkit.event.message.passive.AbstractMessageEvent # Require MIraimc
+    me.dreamvoid.miraimc.bukkit.event.message.passive.MessageEvent # Require MIraimc
     me.dreamvoid.miraimc.api.MiraiBot
 # 初始化
 on load:
@@ -16,7 +16,7 @@ function sendMsgToGroup(message: text):
     {_group}.sendMessage("%{_message}%")
 
 # 群消息->游戏
-on AbstractMessageEvent:
+on MessageEvent:
     event.getGroupID() is {GROUP_ID} # 判断消息是否来自于该群
 
     set {_message} to event.getMessage()
